@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Light Mode */
+:root {
+  --background: linear-gradient(to bottom, #6B21A8, #DB2777); /* Purple to Pink */
+  --foreground: #000000;
+}
+
+/* Dark Mode */
+.dark {
+  --background: linear-gradient(to bottom, #4C1D95, #9D174D); /* Darker Purple to Pink */
+  --foreground: #FFFFFF;
+}
+
+/* Apply background to body */
+body {
+  @apply bg-background text-foreground transition-all duration-500;
+}
