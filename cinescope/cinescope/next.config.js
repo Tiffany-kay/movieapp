@@ -8,7 +8,7 @@ const withPWA = nextPWA({
   disable: process.env.NODE_ENV === "development", // Disable in dev to avoid caching issues
 });
 
-const nextConfig = withPWA({
+const nextConfig = {
   reactStrictMode: true,
   images: {
     remotePatterns: [
@@ -20,23 +20,6 @@ const nextConfig = withPWA({
     ],
     formats: ["image/avif", "image/webp"],
   },
-  async headers() {
-    return [
-      {
-        source: "/manifest.json",
-        headers: [
-          {
-            key: "Access-Control-Allow-Origin",
-            value: "*",
-          },
-          {
-            key: "Content-Type",
-            value: "application/json",
-          },
-        ],
-      },
-    ];
-  },
-});
+};
 
-module.exports = nextConfig;
+module.exports = withPWA(nextConfig);

@@ -1,9 +1,9 @@
-import React, { useEffect, useState, Suspense, lazy, useRef, useContext } from "react";
+import React, { useEffect, useState,Suspense, lazy, useRef } from "react";
 import debounce from "lodash.debounce"; // Debounce for optimized search requests
+import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Movie } from "@/interfaces";
 import { fetchTrendingMovies, fetchMoviesBySearch } from "@/utils/api";
-import { AuthContext } from "@/context/AuthContext";
 
 // Lazy Load MovieCard for better performance
 const MovieCard = lazy(() => import("@/components/MovieCard"));
@@ -13,7 +13,6 @@ const Home: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState(""); // Search input
   const [searchResults, setSearchResults] = useState<Movie[]>([]); // Search results
   const [loading, setLoading] = useState(false); // Loading state
-  const { isLoggedIn, user } = useContext(AuthContext);
 
   // Fetch trending movies on mount
   useEffect(() => {
@@ -56,9 +55,9 @@ const Home: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-purple-600 to-pink-500 dark:from-gray-900 dark:to-gray-800 text-white transition-all">
+      <Navbar />
+
       <main className="p-6 max-w-6xl mx-auto">
-        <h1>Welcome to CineScope</h1>
-        {isLoggedIn ? <p>Welcome, {user?.username}!</p> : <p>Please log in.</p>}
         {/* Search Bar */}
         <div className="relative mb-6">
           <input

@@ -1,14 +1,15 @@
 "use client";
 
-import "@/styles/globals.css"; 
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Link from "next/link";
+import { AuthContext } from "@/context/AuthContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { login } = useContext(AuthContext);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,7 +26,7 @@ export default function Login() {
     setLoading(false);
 
     if (res.ok) {
-      localStorage.setItem("auth-token", data.token);
+      login(data.token, { username: data.username });
       alert("Login successful!");
       window.location.href = "/"; // Redirect to homepage
     } else {
@@ -68,9 +69,9 @@ export default function Login() {
           </button>
         </form>
 
-        <p className="text-center mt-4 text-gray-100">
+        <p className="text-center mt-4 text-gray-900 dark:text-gray-100">
           Don’t have an account?{" "}
-          <Link href="/signup" className="text-pink-300 hover:underline">
+          <Link href="/signup" className="text-pink-600 dark:text-pink-300 hover:underline">
             Sign up here
           </Link>
         </p>

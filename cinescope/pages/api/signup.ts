@@ -1,14 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { saveUserData } from "@/utils/db";
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "POST") return res.status(405).json({ message: "Method Not Allowed" });
-
-  const { email, password } = req.body;
-
-  // Dummy user signup logic (Replace with DB logic)
-  if (!email || !password) {
-    return res.status(400).json({ success: false, errors: "All fields are required" });
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method === "POST") {
+    const { username, email, password } = req.body;
+    const { token, username: savedUsername } = await saveUserData(username, email, password);
+    res.status(200).json({ token, username: savedUsername });
+  } else {
+    res.status(405).json({ error: "Method not allowed" });
   }
-
-  return res.status(201).json({ success: true, message: "User created successfully!", token: "fake-jwt-token" });
 }

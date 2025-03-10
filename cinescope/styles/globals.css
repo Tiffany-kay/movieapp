@@ -14,7 +14,17 @@
   --foreground: #FFFFFF;
 }
 
-/* Apply background to body */
-body {
-  @apply bg-background text-foreground transition-all duration-500;
+/* Ensure full background coverage */
+html, body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background: var(--background);
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  @apply text-foreground transition-all duration-500;
 }

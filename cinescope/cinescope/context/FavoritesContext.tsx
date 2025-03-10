@@ -1,7 +1,5 @@
-import { createContext, useState, useEffect, ReactNode, useContext } from "react";
-import { useRouter } from "next/router";
+import { createContext, useState, useEffect, ReactNode } from "react";
 import { Movie, FavoritesContextTypeProp } from "@/interfaces";
-import { AuthContext } from "@/context/AuthContext";
 
 export const FavoritesContext = createContext<FavoritesContextTypeProp>({
   favorites: [],
@@ -11,8 +9,6 @@ export const FavoritesContext = createContext<FavoritesContextTypeProp>({
 
 export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
   const [favorites, setFavorites] = useState<Movie[]>([]);
-  const { isLoggedIn } = useContext(AuthContext);
-  const router = useRouter();
 
   useEffect(() => {
     const storedFavorites = localStorage.getItem("favorites");
@@ -26,20 +22,12 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
   }, [favorites]);
 
   const addFavorite = (movie: Movie) => {
-    if (!isLoggedIn) {
-      router.push("/login");
-      return;
-    }
     if (!favorites.some((fav) => fav.id === movie.id)) {
       setFavorites([...favorites, movie]);
     }
   };
 
   const removeFavorite = (movieId: number) => {
-    if (!isLoggedIn) {
-      router.push("/login");
-      return;
-    }
     setFavorites(favorites.filter((movie) => movie.id !== movieId));
   };
 

@@ -1,14 +1,17 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { findUserByEmailAndPassword } from "@/utils/db";
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "POST") return res.status(405).json({ message: "Method Not Allowed" });
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method === "POST") {
+    const { email, password } = req.body;
+    const user = await findUserByEmailAndPassword(email, password);
 
-  const { email, password } = req.body;
-
-  // Dummy user authentication (Replace with DB logic)
-  if (email === "test@example.com" && password === "password123") {
-    return res.status(200).json({ success: true, token: "fake-jwt-token" });
+    if (user) {
+      res.status(200).json({ token: user.token, username: user.username });
+    } else {
+      res.status(401).json({ errors: "Invalid credentials" });
+    }
+  } else {
+    res.status(405).json({ error: "Method not allowed" });
   }
-
-  return res.status(401).json({ success: false, errors: "Invalid credentials" });
 }

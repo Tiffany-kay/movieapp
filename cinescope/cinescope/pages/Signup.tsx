@@ -1,38 +1,31 @@
 "use client";
 
-import { useState, useContext } from "react";
+import "@/styles/globals.css"; 
+import { useState } from "react";
 import Link from "next/link";
-import { AuthContext } from "@/context/AuthContext";
 
 export default function Signup() {
-  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { login } = useContext(AuthContext);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
     setLoading(true);
     setError(null);
 
     const res = await fetch("/api/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, email, password }),
+      body: JSON.stringify({ email, password }),
     });
 
     const data = await res.json();
     setLoading(false);
 
     if (res.ok) {
-      login(data.token, { username: data.username });
+      localStorage.setItem("auth-token", data.token);
       alert("Signup successful!");
       window.location.href = "/"; // Redirect to homepage
     } else {
@@ -49,14 +42,6 @@ export default function Signup() {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Username"
-            required
-            className="w-full p-2 rounded border bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white"
-          />
-          <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -64,19 +49,12 @@ export default function Signup() {
             required
             className="w-full p-2 rounded border bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white"
           />
+
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
-            required
-            className="w-full p-2 rounded border bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white"
-          />
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder="Confirm Password"
             required
             className="w-full p-2 rounded border bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white"
           />
@@ -90,9 +68,9 @@ export default function Signup() {
           </button>
         </form>
 
-        <p className="text-center mt-4 text-gray-900 dark:text-gray-100">
+        <p className="text-center mt-4 text-gray-100">
           Already have an account?{" "}
-          <Link href="/login" className="text-purple-600 dark:text-purple-300 hover:underline">
+          <Link href="/login" className="text-purple-300 hover:underline">
             Login here
           </Link>
         </p>
